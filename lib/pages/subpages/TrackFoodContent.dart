@@ -1,13 +1,16 @@
 import 'dart:collection';
 
+import 'package:clay_containers/clay_containers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multiselectable_dropdown/multiselectable_dropdown.dart';
 import 'package:provider/provider.dart';
 import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
+import 'package:thedietplan/CustomWidgets/multi_select.dart';
 import 'package:thedietplan/models/FoodModel.dart';
 import 'package:thedietplan/models/LoginModel.dart';
+import 'package:thedietplan/types/CreateDietArguments.dart';
 import 'package:thedietplan/types/FoodItem.dart';
 import 'package:thedietplan/util/FoodProcessor.dart';
 
@@ -48,7 +51,7 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
           'selection': true,
           'userEmail': email,
           'selectedItems': fp.getSelectedItems(),
-          'createdAt': DateFormat.yMMMd().format(DateTime.now())
+          'createdAt': DateTime.now()
         })
         .then((value) => {print('successfully updated the selected food list')})
         .catchError((error) => print("Failed to add food: $error"));
@@ -60,8 +63,9 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Color(0xff1e1e1e),
+        decoration: GradientDecoration.getDecoration(),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,13 +74,13 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Icon(
                     Icons.info_outline,
-                    color: Colors.indigoAccent,
+                    color: Color(0xff6d6875),
                   ),
                 ),
                 Flexible(
                   child: Text(
                     "Select at least one food item from each nutritional category to prepare your diet chart",
-                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                    style: TextStyle(fontSize: 16, color: Color(0xff6d6875)),
                   ),
                 ),
               ],
@@ -84,11 +88,15 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              height: 450,
-              decoration: GradientDecoration.getDecoration(),
-              child: ListView(
-                  scrollDirection: Axis.vertical, children: (fp.getItemList(widget.selectedFoods))),
+            ClayContainer(
+              emboss: true,
+              color: Color(0xffffb4a2),
+              child: Container(
+                height: 450,
+//              child: Multi_Select("Folate"),
+                child: ListView(
+                    scrollDirection: Axis.vertical, children: (fp.getItemList(widget.selectedFoods))),
+              ),
             ),
             SizedBox(
               height: 20,
@@ -98,24 +106,21 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
                 String email = Provider.of<LoginModel>(context, listen: false).getUserEmail();
                 trackDiet(email);
               },
-              child: Container(
-                child: Center(
-                    child: Text(
-                  "Prepare Your Diet Chart",
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                )),
-                height: 50,
-                width: 250,
-                decoration: GradientDecoration.getButtonDecoration(),
+              child: ClayContainer(
+                color: Color(0xffffcdb2),
+                depth: 30,
+                child: Container(
+                  child: Center(
+                      child: Text(
+                    "Prepare Your Diet Chart",
+                    style: TextStyle(color: Color(0xff6d6875), fontSize: 16),
+                  )),
+                  height: 50,
+                  width: 300,
+                ),
               ),
             ),
           ],
         ));
   }
-}
-
-class CreateDietArguments {
-  final Map foodItems;
-  final List<FoodItem> memberFoodItems;
-  CreateDietArguments({this.memberFoodItems, this.foodItems});
 }

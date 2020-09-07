@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thedietplan/types/TrackFoodArgs.dart';
 
 import 'subpages/TrackFoodContent.dart';
 
@@ -11,7 +12,8 @@ class TrackFood extends StatelessWidget {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text("Your Diet"),
-        backgroundColor: Color(0XFF1E1E1E),
+        centerTitle: true,
+        backgroundColor: Color(0XFF6d6875),
         iconTheme: IconThemeData(
             color:Color(0XFFC4BFBF)
         ),
@@ -21,9 +23,4 @@ class TrackFood extends StatelessWidget {
       body: TrackFoodContent(args.selectedFoods), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-}
-
-class TrackFoodArgs{
-  final Map<String,List<String>> selectedFoods;
-  TrackFoodArgs(this.selectedFoods);
 }

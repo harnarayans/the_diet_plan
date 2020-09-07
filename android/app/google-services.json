@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "27692945466",
+    "firebase_url": "https://the-diet-plan-ee87e.firebaseio.com",
+    "project_id": "the-diet-plan-ee87e",
+    "storage_bucket": "the-diet-plan-ee87e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27692945466:android:e710cfe7971e85b7c72503",
+        "android_client_info": {
+          "package_name": "com.harnarayans.thedietplan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27692945466-q0hu0vnsbs4fqt1278kv1nuohcnte28q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.harnarayans.thedietplan",
+            "certificate_hash": "afabb6bb88e909aca302a555d8731fc9aeaf1025"
+          }
+        },
+        {
+          "client_id": "27692945466-rog8lrmn24574030jkgkqd6dv741ggsi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArn4rW8IqhZz4dQPV5Jyw9gugSFmACblw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27692945466-rog8lrmn24574030jkgkqd6dv741ggsi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

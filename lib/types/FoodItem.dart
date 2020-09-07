@@ -22,10 +22,11 @@ class FoodItem{
     return FoodItem(json['name'] as String, nutrientList, json['caloryRating'] as String);
   }
 
-  int compareTo(FoodItem item){
-    if(this.name == item.name) return 0;
-    else return(item.name.length - this.name.length);
-  }
+  bool operator ==(o) => o is FoodItem && o.name == name;
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => super.hashCode;
 }
 
 enum CaloryRating {

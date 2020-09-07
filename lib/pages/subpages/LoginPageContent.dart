@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:thedietplan/CustomWidgets/FbLoginButton.dart';
+import 'package:thedietplan/CustomWidgets/GoogleLoginButton.dart';
+import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
 import 'package:thedietplan/models/LoginModel.dart';
 import 'package:thedietplan/util/sign_in.dart';
 
@@ -15,51 +18,20 @@ class _LoginPageContentState extends State<LoginPageContent> {
     return ChangeNotifierProvider(
       create: (context) => LoginModel(),
       child: Container(
+        decoration: GradientDecoration.getDecoration(),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Image(
-              image: AssetImage("assets/pregnancy_logo.png"),
-            ),
-            SizedBox(height: 50),
-            _signInButton(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _signInButton() {
-    return OutlineButton(
-      splashColor: Colors.grey,
-      onPressed: () {
-        LoginModel loginModel = Provider.of<LoginModel>(context, listen:false);
-        sign_in().signInWithGoogle().then((value) => {
-              loginModel.setName(value.displayName),
-              loginModel.setUrl(value.photoURL),
-              loginModel.setUserEmail(value.email),
-      });
-        Navigator.pushNamed(context, "/home");
-      },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.grey),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            Image(image: AssetImage("assets/google_logo.png"), height: 35.0),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                'Sign in with Google',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey,
-                ),
+            Card(
+              elevation: 5,
+              margin: EdgeInsets.all(18),
+              child: Image(
+                image: AssetImage("assets/diet_Plan.jpg"),
+                fit: BoxFit.fill,
               ),
-            )
+            ),
+            SizedBox(height: 70,),
+            GoogleLoginButton.getLoginButton(context),
           ],
         ),
       ),

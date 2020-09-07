@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:thedietplan/types/FoodItem.dart';
+import 'package:thedietplan/types/FoodOtions.dart';
 import 'package:thedietplan/types/Nutrition.dart';
 import 'package:thedietplan/util/NutrientColor.dart';
 
@@ -12,18 +13,24 @@ class FoodModel extends ChangeNotifier{
     consumedFoodList={};
   }
 
+  void revertConsumption(String foodItem){
+    selectedFoodList.addAll(consumedFoodList.where((element) => element.name == foodItem));
+    consumedFoodList.removeWhere((element) => element.name == foodItem);
+    notifyListeners();
+  }
   void setSelectedFoods(Map<String,List<String>> foodMap){
     foodMap.forEach((key, value) { 
       for(var item in value){
         Set<Nutrition> nutrients={};
-        foodMap.forEach((key1, value1) {
+        FoodOptions.getFoodOptions().forEach((key1, value1) {
           if(value1.contains(item)){
-            nutrients.add(Nutrition(key,NutrientColor.getNutrientColor(key)));
+            nutrients.add(Nutrition(key1,NutrientColor.getNutrientColor(key1)));
           }
         });
         selectedFoodList.add(FoodItem( item,nutrients.toList(),"Medium"));
       }
     });
+    notifyListeners();
   }
 
   void setConsumedFoods(List<FoodItem> foodsList){
@@ -34,16 +41,7 @@ class FoodModel extends ChangeNotifier{
         selectedFoodList.remove(element);
       }
     });
-//    Map<String,List<String>> foodMap = FoodOptions.getFoodOptions();
-//    foodsList.forEach((element) {
-//      Set<Nutrition> nutrients={};
-//      foodMap.forEach((key, value) {
-//        if(value.contains(element)){
-//          nutrients.add(Nutrition(key,NutrientColor.getNutrientColor(key)));
-//        }
-//      });
-//      consumedFoodList.add(FoodItem( element,nutrients.toList()));
-//    });
+    notifyListeners();
   }
 
   List<FoodItem> getSelectedFoodList(){
@@ -55,23 +53,37 @@ class FoodModel extends ChangeNotifier{
   }
 
   void consumeFood(FoodItem foodItem){
+    if(!consumedFoodList.contains(foodItem))
     consumedFoodList.add(foodItem);
     selectedFoodList.remove(foodItem);
     notifyListeners();
   }
 
   List<Nutrition> getSelectedNutrients(){
-    Set<Nutrition> nutrients = {};
+    Set<String> nutrients = {};
+    List<Nutrition> nutriList=[];
     for(var item in selectedFoodList){
-      nutrients.addAll(item.nutrients);
+      item.nutrients.forEach((element) {
+        if(!nutrients.contains(element.name)){
+          nutrients.add(element.name);
+          nutriList.add(element);
+        }
+      });
     }
-    return nutrients.toList();
+    return nutriList;
   }
+
   List<Nutrition> getConsumedNutrients(){
-    Set<Nutrition> nutrients = {};
+    Set<String> nutrients = {};
+    List<Nutrition> nutriList=[];
     for(var item in consumedFoodList){
-      nutrients.addAll(item.nutrients);
+      item.nutrients.forEach((element) {
+        if(!nutrients.contains(element.name)){
+          nutrients.add(element.name);
+          nutriList.add(element);
+        }
+      });
     }
-    return nutrients.toList();
+    return nutriList;
   }
 }

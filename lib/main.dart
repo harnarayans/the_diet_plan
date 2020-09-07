@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 
 import 'Pages/CreateDietChart.dart';
 import 'Pages/LoginScreen.dart';
-import 'Pages/HomePage.dart';
 import 'Pages/TrackFood.dart';
 import 'models/FoodModel.dart';
 import 'models/LoginModel.dart';
+import 'pages/HomePage.dart';
 
 void main() {
   runApp(App());
@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           "/": (context) => LoginScreen(),
-          '/home': (context) => MyHomePage(),
+          '/home': (context) => HomePage(),
           '/food': (context) => TrackFood(),
           '/createDiet': (context) => CreateDietChart(),
         },

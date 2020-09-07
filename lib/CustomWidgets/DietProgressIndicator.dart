@@ -1,31 +1,51 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:thedietplan/CustomWidgets/animated_nutrient.dart';
+import 'package:thedietplan/models/FoodModel.dart';
+import 'package:thedietplan/types/FoodItem.dart';
+import 'package:thedietplan/types/Nutrition.dart';
 
 class DietProgressIndicator extends StatefulWidget {
-  final boxCount;
-  List<Color> colors;
-  DietProgressIndicator(this.boxCount, this.colors);
   @override
   _DietProgressIndicatorState createState() => _DietProgressIndicatorState();
 }
 
 class _DietProgressIndicatorState extends State<DietProgressIndicator> {
-  List<Widget> getBoxes(){
+  List<Widget> getBoxes(context) {
+    List<Nutrition> selectedNutrients =
+        Provider.of<FoodModel>(context).getSelectedNutrients();
+    List<Nutrition> consumedNutrients =
+        Provider.of<FoodModel>(context).getConsumedNutrients();
     List<Widget> boxes = [];
-    for(int i=0; i< widget.boxCount; i++){
+    Set<String> nutrients = {};
+    consumedNutrients.forEach((element) {
+      nutrients.add(element.name);
       boxes.add(Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container( child: SizedBox(height: 20, width: 20,), color: i>=widget.colors.length?Colors.white70:widget.colors[i],),
+        child: Animated_Nutrient(element, true),
       ));
-    }
+    });
+    selectedNutrients.forEach((element) {
+      if (!nutrients.contains(element.name)) {
+        boxes.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Animated_Nutrient(element, false),
+        ));
+      }
+    });
     return boxes;
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: getBoxes(),
+      child: Wrap(
+        children: getBoxes(context),
+        runAlignment: WrapAlignment.start,
+        crossAxisAlignment: WrapCrossAlignment.start,
       ),
     );
   }

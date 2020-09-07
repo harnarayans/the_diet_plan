@@ -1,3 +1,4 @@
+import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thedietplan/CustomWidgets/Chips.dart';
+import 'package:thedietplan/CustomWidgets/Dialogs.dart';
 import 'package:thedietplan/CustomWidgets/DietProgressIndicator.dart';
 import 'package:thedietplan/CustomWidgets/FoodTile.dart';
 import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
@@ -12,21 +14,23 @@ import 'package:thedietplan/Pages/TrackFood.dart';
 import 'package:thedietplan/models/FoodModel.dart';
 import 'package:thedietplan/models/LoginModel.dart';
 import 'package:thedietplan/types/FoodItem.dart';
+import 'package:thedietplan/types/FoodOtions.dart';
+import 'package:thedietplan/types/Nutrition.dart';
 import 'package:thedietplan/util/NutrientColor.dart';
+import 'package:thedietplan/types/TrackFoodArgs.dart';
 
 class CreateDietContent extends StatefulWidget {
-  List<FoodItem> memberFoodList;
-  final foodItems;
-  CreateDietContent({this.memberFoodList, this.foodItems});
   @override
   _CreateDietContentState createState() => _CreateDietContentState();
 }
 
 class _CreateDietContentState extends State<CreateDietContent> {
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool isSuccessful = false;
   final dbReference = FirebaseFirestore.instance;
   List<String> foodList = [];
   int ingredientCount = 0;
+  List<Color> consumedColors=[];
 
   void storeItems(email) async {
     List<FoodItem> foodItems =
@@ -38,12 +42,18 @@ class _CreateDietContentState extends State<CreateDietContent> {
           'selection': false,
           'userEmail': email,
           'foodItems': stringifiedItems,
-          'createdAt': DateFormat.yMMMd().format(DateTime.now())
+          'createdAt': DateTime.now()
         })
         .then((value) => {
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Successfully updated the consumed food items'), backgroundColor: Colors.lightBlueAccent,))})
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Successfully updated the consumed food items'), backgroundColor: Colors.lightBlueAccent,)),
+          Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop(),
+          Navigator.of(context).popUntil(ModalRoute.withName("/home")),
+        })
         .catchError(
-            (error) => print("Failed to add food: ${error.toString()}"));
+            (error) => {
+            print("Failed to add food: ${error.toString()}"),
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop()
+            });
   }
 
   List<Widget> getItemsLayout(context) {
@@ -61,13 +71,16 @@ class _CreateDietContentState extends State<CreateDietContent> {
     for (var item in selectedFoods) {
       if (!consumedFoods.contains(item))
         temp.add(Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Draggable(
-                axis:Axis.vertical,
-                child: FoodTile(item),
-                feedback: Chips(title: item.name),
-                childWhenDragging: Container(),
-                data: item)));
+          padding: const EdgeInsets.all(3.0),
+          child: Draggable(
+            affinity: Axis.vertical,
+              axis:Axis.vertical,
+              child: FoodTile(item),
+              feedback: Chips(title: item.name),
+              childWhenDragging: Container(),
+              data: item),
+        )
+        );
     }
     return temp;
   }
@@ -86,7 +99,7 @@ class _CreateDietContentState extends State<CreateDietContent> {
 
   List<Widget> getSelectedItemsLayout(context) {
     List<FoodItem> consumedFoods =
-        Provider.of<FoodModel>(context, listen: false).getConsumedFoodList();
+        Provider.of<FoodModel>(context, listen: true).getConsumedFoodList();
     if (consumedFoods == null) consumedFoods = [];
     if (consumedFoods.length > 0) {
       isSuccessful = true;
@@ -100,41 +113,76 @@ class _CreateDietContentState extends State<CreateDietContent> {
     return temp;
   }
 
-  List<Color> getNutrientColors() {
-    List<Color> nutrientColors = [];
+  void getNutrientColors(context) {
+    Set<Color> nutrientColors = {};
     Provider.of<FoodModel>(context).getConsumedNutrients().forEach((element) {
       nutrientColors.add(NutrientColor.getNutrientColor(element.name));
     });
-    return nutrientColors;
+    print(consumedColors.length);
+    consumedColors = nutrientColors.toList();
+  }
+
+  void getIngredientCount(context){
+    Set<String> nutrients ={};
+    Provider.of<FoodModel>(context).getSelectedFoodList().forEach((element) {
+      nutrients.addAll(element.nutrients.map((e) => e.name));
+    });
+    Provider.of<FoodModel>(context).getConsumedFoodList().forEach((element) {
+      nutrients.addAll(element.nutrients.map((e) => e.name));
+    });
+    ingredientCount = nutrients.length;
+    print(ingredientCount);
+  }
+
+  void navigateToTrackFood(context){
+    Map<String,List<String>> foodItems = FoodOptions.getEmptyFoodOptions();
+    List<FoodItem> selectedFoods = Provider.of<FoodModel>(context, listen: false).getSelectedFoodList();
+    selectedFoods.forEach((element) {
+      element.nutrients.forEach((element1) {
+        foodItems[element1.name].add(element.name);
+      });
+    });
+    Navigator.pushNamed(context, "/food", arguments: TrackFoodArgs(foodItems));
   }
 
   @override
   Widget build(BuildContext context) {
+    getIngredientCount(context);
+    getNutrientColors(context);
     return Container(
-      color: Color(0xff1e1e1e),
+      decoration: GradientDecoration.getDecoration(),
+      padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Icon(
-                Icons.info_outline,
-                color: Colors.white70,
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.info_outline,
+                    color: Color(0xff6d6875),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      "Nutrients Progress Indicator",
+                      style: TextStyle( fontSize: 15, color: Color(0xff6d6875)),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Text(
-                  "Nutrients Progress Indicator",
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ),
+              DietProgressIndicator(),
             ],
           ),
-          DietProgressIndicator(ingredientCount, getNutrientColors()),
-          Container(
-            decoration: GradientDecoration.getDecoration(),
+          SizedBox(height: 20,),
+          ClayContainer(
+            color: Color(0xffffbd99),
+            depth: 30,
+            emboss: true,
             child: SizedBox(
-              height: 200,
+              height: 130,
               child: Scrollbar(
                 child: ListView(
                   padding: EdgeInsets.all(5.0),
@@ -144,77 +192,86 @@ class _CreateDietContentState extends State<CreateDietContent> {
               ),
             ),
           ),
-          Container(
-            height: 300,
-            margin: EdgeInsets.symmetric(vertical: 5),
-            decoration: GradientDecoration.getDecoration(),
-            child: Stack(
-              children: [
-                DragTarget(
-                  builder:
-                      (context, List<FoodItem> candidateData, rejectedData) {
-                    return isSuccessful
-                        ? Container(
-                            child: SizedBox(
-                              height: 500,
-                              width: double.infinity,
-                              child: Wrap(
-                                children: getSelectedItemsLayout(context),
+          SizedBox(height: 20,),
+          ClayContainer(
+            depth: 10,
+            color: Color(0xffffcdb2),
+            child: Container(
+              height: 250,
+              margin: EdgeInsets.symmetric(vertical: 5),
+              child: Stack(
+                children: [
+                  DragTarget(
+                    builder:
+                        (context, List<FoodItem> candidateData, rejectedData) {
+                      return isSuccessful
+                          ? Container(
+                              child: SizedBox(
+                                height: 500,
+                                width: double.infinity,
+                                child: Wrap(
+                                  children: getSelectedItemsLayout(context),
+                                ),
                               ),
-                            ),
-                          )
-                        : Container(
-                            width: double.infinity,
-                            height: 500,
-                            color: Colors.white70,
-                          );
-                  },
-                  onWillAccept: (data) {
-                    return true;
-                  },
-                  onAccept: (FoodItem item) {
-                    FoodModel fm =
-                        Provider.of<FoodModel>(context, listen: false);
-                    fm.consumeFood(item);
-                    isSuccessful = true;
-                  },
-                ),
-                Center(
-                    child: Text(
-                        "Drag and drop here the food items you consumed today")),
-              ],
+                            )
+                          : Container(
+                              width: double.infinity,
+                              height: 500,
+                            );
+                    },
+                    onWillAccept: (data) {
+                      return true;
+                    },
+                    onAccept: (FoodItem item) {
+                      FoodModel fm =
+                          Provider.of<FoodModel>(context, listen: false);
+                      fm.consumeFood(item);
+                      isSuccessful = true;
+                    },
+                  ),
+                  Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                            "Drag and drop here the food items you consumed today", style: TextStyle(color: Color(0xff6d6875)),),
+                      ),
+                  ),
+                ],
+              ),
             ),
           ),
           FlatButton(
             onPressed: () {
+              Dialogs.showLoadingDialog(context, _keyLoader);
               String email = Provider.of<LoginModel>(context, listen: false)
                   .getUserEmail();
               storeItems(email);
             },
-            child: Container(
+            child: ClayContainer(
+              color: Color(0xffffcdb2),
+              depth: 40,
+              height: 40,
               child: Center(
                   child: Text(
-                "Record your diet",
-                style: TextStyle(color: Colors.white70, fontSize: 16),
+                "Record The Consumed Food Items",
+                style: TextStyle(color: Color(0xff6d6875), fontSize: 16),
               )),
-              height: 40,
-              width: 250,
-              decoration: GradientDecoration.getButtonDecoration(),
             ),
           ),
+          SizedBox(height: 15,),
           FlatButton(
             onPressed: () {
-              Navigator.pushNamed(context, "/food", arguments: TrackFoodArgs(widget.foodItems));
+              navigateToTrackFood(context);
             },
-            child: Container(
+            child: ClayContainer(
+              color: Color(0xffffcdb2),
+              depth: 40,
+              height: 40,
               child: Center(
                   child: Text(
-                    "Change the selection",
-                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                    "Change The Selected Food Items",
+                    style: TextStyle(color: Color(0xff6d6875), fontSize: 16),
                   )),
-              height: 40,
-              width: 250,
-              decoration: GradientDecoration.getButtonDecoration(),
             ),
           ),
         ],

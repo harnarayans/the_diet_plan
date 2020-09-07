@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:thedietplan/types/CreateDietArguments.dart';
 
 import 'subpages/CreateDietContent.dart';
-import 'subpages/TrackFoodContent.dart';
 
 class CreateDietChart extends StatefulWidget {
   static const routeName = '/extractArguments';
@@ -18,7 +18,8 @@ class _CreateDietChartState extends State<CreateDietChart> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text("Prepare your diet chart"),
-        backgroundColor: Color(0XFF1E1E1E),
+        centerTitle: true,
+        backgroundColor: Color(0XFF6d6875),
         iconTheme: IconThemeData(
             color:Color(0XFFC4BFBF)
         ),
@@ -28,7 +29,7 @@ class _CreateDietChartState extends State<CreateDietChart> {
         actions: <Widget>[
         ],
       ),
-      body: CreateDietContent( foodItems: args.foodItems, memberFoodList: args.memberFoodItems,), // This trailing comma makes auto-formatting nicer for build methods.
+      body: CreateDietContent( ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

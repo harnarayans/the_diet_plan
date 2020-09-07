@@ -20,6 +20,18 @@ class FoodOptions{
     return foodMap;
   }
 
+  static Map<String,List<String>> getEmptyFoodOptions(){
+    return {"Vitamin C":[],
+      "Folate":[],
+      "Vitamin B":[],
+      "Vitamin D":[],
+      "Iron":[],
+      "Calcium":[],
+      "Protein":[],
+      "Good Fat":[],
+      "Fiber":[]};
+  }
+
   List<FoodItem> prepareFoodObjects(List<String> foodList){
     List<FoodItem> foodObjects = [];
     foodList.forEach((element) {
