@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:thedietplan/CustomWidgets/Dialogs.dart';
 import 'package:thedietplan/types/CreateDietArguments.dart';
 
 import 'subpages/CreateDietContent.dart';
 
-class CreateDietChart extends StatefulWidget {
-  static const routeName = '/extractArguments';
-  @override
-  _CreateDietChartState createState() => _CreateDietChartState();
-}
-
-class _CreateDietChartState extends State<CreateDietChart> {
+class CreateDietChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CreateDietArguments args = ModalRoute.of(context).settings.arguments;
@@ -29,7 +24,7 @@ class _CreateDietChartState extends State<CreateDietChart> {
         actions: <Widget>[
         ],
       ),
-      body: CreateDietContent( ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: CreateDietContent(), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

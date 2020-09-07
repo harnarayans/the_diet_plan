@@ -1,5 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:thedietplan/models/FoodModel.dart';
+import 'package:thedietplan/models/LoginModel.dart';
+import 'package:thedietplan/util/HandleFoodModel.dart';
 
 import 'Indicator.dart';
 
@@ -30,11 +34,29 @@ class PieChart1State extends State {
           ),
           sectionsSpace: 0,
           centerSpaceRadius: 40,
-          sections: showingSections()),
+          sections: showingSections(context)),
     );
   }
 
-  List<PieChartSectionData> showingSections() {
+  List<PieChartSectionData> showingSections(context) {
+    String email = Provider.of<LoginModel>(context).email;
+    double totalSelectedNutrients = 2;
+    double totalConsumedNutrients = 8;
+//    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length >0){
+//      totalSelectedNutrients = Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length.toDouble();
+//    }else{
+//      HandleFoodModel(email).updateSelectedFoodListToLocalModel(context, email);
+//      totalSelectedNutrients = Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length.toDouble();
+//    }
+//    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length >0){
+//      totalConsumedNutrients = Provider.of<FoodModel>(context, listen: true).getConsumedNutrients().length.toDouble();
+//    }else{
+//      HandleFoodModel(email).updateSelectedFoodListToLocalModel(context, email);
+//      totalConsumedNutrients = Provider.of<FoodModel>(context, listen: true).getConsumedNutrients().length.toDouble();
+//    }
+
+    print("selected nutri = $totalSelectedNutrients");
+    print("consumed = $totalConsumedNutrients");
     return List.generate(2, (i) {
       final isTouched = i == touchedIndex;
       final double fontSize = isTouched ? 20 : 12;
@@ -43,8 +65,8 @@ class PieChart1State extends State {
         case 0:
           return PieChartSectionData(
             color: const Color(0xffb5838d),
-            value: 70,
-            title: '70%',
+            value: totalConsumedNutrients,
+            title: '',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
@@ -52,7 +74,7 @@ class PieChart1State extends State {
         case 1:
           return PieChartSectionData(
             color: const Color(0xffffad99),
-            value: 30,
+            value: totalSelectedNutrients,
             title: '',
             radius: radius,
             titleStyle: TextStyle(

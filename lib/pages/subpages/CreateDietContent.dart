@@ -1,23 +1,19 @@
 import 'package:clay_containers/clay_containers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:thedietplan/CustomWidgets/Chips.dart';
-import 'package:thedietplan/CustomWidgets/Dialogs.dart';
 import 'package:thedietplan/CustomWidgets/DietProgressIndicator.dart';
 import 'package:thedietplan/CustomWidgets/FoodTile.dart';
 import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
-import 'package:thedietplan/Pages/TrackFood.dart';
 import 'package:thedietplan/models/FoodModel.dart';
 import 'package:thedietplan/models/LoginModel.dart';
 import 'package:thedietplan/types/FoodItem.dart';
 import 'package:thedietplan/types/FoodOtions.dart';
-import 'package:thedietplan/types/Nutrition.dart';
-import 'package:thedietplan/util/NutrientColor.dart';
 import 'package:thedietplan/types/TrackFoodArgs.dart';
+import 'package:thedietplan/util/HandleFoodModel.dart';
+import 'package:thedietplan/util/NutrientColor.dart';
 
 class CreateDietContent extends StatefulWidget {
   @override
@@ -25,35 +21,17 @@ class CreateDietContent extends StatefulWidget {
 }
 
 class _CreateDietContentState extends State<CreateDietContent> {
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool isSuccessful = false;
   final dbReference = FirebaseFirestore.instance;
   List<String> foodList = [];
   int ingredientCount = 0;
   List<Color> consumedColors=[];
 
-  void storeItems(email) async {
-    List<FoodItem> foodItems =
-        Provider.of<FoodModel>(context, listen: false).getConsumedFoodList();
-    List<Map> stringifiedItems = foodItems.map((e) => e.toJson()).toList();
-    await dbReference
-        .collection("foods")
-        .add({
-          'selection': false,
-          'userEmail': email,
-          'foodItems': stringifiedItems,
-          'createdAt': DateTime.now()
-        })
-        .then((value) => {
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('Successfully updated the consumed food items'), backgroundColor: Colors.lightBlueAccent,)),
-          Navigator.of(_keyLoader.currentContext,rootNavigator: true).pop(),
-          Navigator.of(context).popUntil(ModalRoute.withName("/home")),
-        })
-        .catchError(
-            (error) => {
-            print("Failed to add food: ${error.toString()}"),
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop()
-            });
+  void storeItems(context,email) async {
+    await HandleFoodModel(email).storeLocalModelToDB(context);
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Successfully updated the consumed food items'), backgroundColor: Colors.lightBlueAccent,));
+    Navigator.of(context).popUntil(ModalRoute.withName("/home"));
+
   }
 
   List<Widget> getItemsLayout(context) {
@@ -113,27 +91,6 @@ class _CreateDietContentState extends State<CreateDietContent> {
     return temp;
   }
 
-  void getNutrientColors(context) {
-    Set<Color> nutrientColors = {};
-    Provider.of<FoodModel>(context).getConsumedNutrients().forEach((element) {
-      nutrientColors.add(NutrientColor.getNutrientColor(element.name));
-    });
-    print(consumedColors.length);
-    consumedColors = nutrientColors.toList();
-  }
-
-  void getIngredientCount(context){
-    Set<String> nutrients ={};
-    Provider.of<FoodModel>(context).getSelectedFoodList().forEach((element) {
-      nutrients.addAll(element.nutrients.map((e) => e.name));
-    });
-    Provider.of<FoodModel>(context).getConsumedFoodList().forEach((element) {
-      nutrients.addAll(element.nutrients.map((e) => e.name));
-    });
-    ingredientCount = nutrients.length;
-    print(ingredientCount);
-  }
-
   void navigateToTrackFood(context){
     Map<String,List<String>> foodItems = FoodOptions.getEmptyFoodOptions();
     List<FoodItem> selectedFoods = Provider.of<FoodModel>(context, listen: false).getSelectedFoodList();
@@ -147,8 +104,6 @@ class _CreateDietContentState extends State<CreateDietContent> {
 
   @override
   Widget build(BuildContext context) {
-    getIngredientCount(context);
-    getNutrientColors(context);
     return Container(
       decoration: GradientDecoration.getDecoration(),
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -242,10 +197,9 @@ class _CreateDietContentState extends State<CreateDietContent> {
           ),
           FlatButton(
             onPressed: () {
-              Dialogs.showLoadingDialog(context, _keyLoader);
               String email = Provider.of<LoginModel>(context, listen: false)
                   .getUserEmail();
-              storeItems(email);
+              storeItems(context, email);
             },
             child: ClayContainer(
               color: Color(0xffffcdb2),
