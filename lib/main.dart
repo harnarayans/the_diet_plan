@@ -43,7 +43,7 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: new AppBar(title: Text("The Pregnancy App"),),
+        appBar: new AppBar(title: Text("The Nutritions Planner"),),
         backgroundColor: Color(0XFFD569A8),
         body: Container(
           child: Column(
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        title: 'The Pregnancy App',
+        title: 'The Nutritions Planner',
         theme: ThemeData(
           // This is the theme of your application.
           //

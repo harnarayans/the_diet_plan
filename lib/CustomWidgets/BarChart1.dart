@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
 
 class BarChart1 extends StatefulWidget {
   final List<Color> availableColors = [
@@ -11,7 +12,7 @@ class BarChart1 extends StatefulWidget {
     Colors.lightBlue,
     Colors.orange,
     Colors.pink,
-    Colors.redAccent,
+    Colors.green,
   ];
 
   @override
@@ -19,7 +20,7 @@ class BarChart1 extends StatefulWidget {
 }
 
 class BarChart1State extends State<BarChart1> {
-  final Color barBackgroundColor = const Color(0xffffb4a2);
+  final Color barBackgroundColor = const Color(0xff72efdd);
   final Duration animDuration = const Duration(milliseconds: 250);
 
   int touchedIndex;
@@ -33,7 +34,7 @@ class BarChart1State extends State<BarChart1> {
       child: Card(
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        color: const Color(0xffff9980),
+        color: GradientDecoration.getGraphBackgroundColor(),
         child: Stack(
           children: <Widget>[
             Padding(
@@ -44,17 +45,17 @@ class BarChart1State extends State<BarChart1> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Text(
-                    'Mingguan',
+                    'Last Week Trend',
                     style: TextStyle(
-                        color: const Color(0xff675e75), fontSize: 24, fontWeight: FontWeight.bold),
+                        color: GradientDecoration.getButtonTextColor(), fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 4,
                   ),
                   Text(
-                    'Grafik konsumsi kalori',
+                    'Percent Nutrition Target Achieved /Day',
                     style: TextStyle(
-                        color: const Color(0xff6d6875), fontSize: 18, fontWeight: FontWeight.bold),
+                        color: GradientDecoration.getFontColor(), fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 38,
@@ -81,7 +82,7 @@ class BarChart1State extends State<BarChart1> {
                 child: IconButton(
                   icon: Icon(
                     isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: const Color(0xff336ff2),
+                    color: Color(0xffffc466),
                   ),
                   onPressed: () {
                     setState(() {
@@ -104,7 +105,7 @@ class BarChart1State extends State<BarChart1> {
       int x,
       double y, {
         bool isTouched = false,
-        Color barColor = const Color(0xffb5838d),
+        Color barColor = Colors.yellow,
         double width = 22,
         List<int> showTooltips = const [],
       }) {
@@ -113,7 +114,7 @@ class BarChart1State extends State<BarChart1> {
       barRods: [
         BarChartRodData(
           y: isTouched ? y + 1 : y,
-          color: isTouched ? Colors.yellow : barColor,
+          color: isTouched ? Colors.greenAccent : barColor,
           width: width,
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
@@ -129,19 +130,19 @@ class BarChart1State extends State<BarChart1> {
   List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
     switch (i) {
       case 0:
-        return makeGroupData(0, 5, isTouched: i == touchedIndex);
+        return makeGroupData(0, 15, isTouched: i == touchedIndex);
       case 1:
-        return makeGroupData(1, 6.5, isTouched: i == touchedIndex);
+        return makeGroupData(1, 16.5, isTouched: i == touchedIndex);
       case 2:
-        return makeGroupData(2, 5, isTouched: i == touchedIndex);
+        return makeGroupData(2, 15, isTouched: i == touchedIndex);
       case 3:
-        return makeGroupData(3, 7.5, isTouched: i == touchedIndex);
+        return makeGroupData(3, 17.5, isTouched: i == touchedIndex);
       case 4:
-        return makeGroupData(4, 9, isTouched: i == touchedIndex);
+        return makeGroupData(4, 19, isTouched: i == touchedIndex);
       case 5:
         return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
       case 6:
-        return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
+        return makeGroupData(6, 16.5, isTouched: i == touchedIndex);
       default:
         return null;
     }

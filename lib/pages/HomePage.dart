@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
+import 'package:thedietplan/util/sign_in.dart';
 
 import 'subpages/HomePageContent.dart';
 
@@ -9,16 +11,26 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("Your Dashboard", style: TextStyle(color: Colors.white70), ),
+        title: Text("Your Dashboard", style: TextStyle(color: GradientDecoration.getFontColor()), ),
         centerTitle: true,
-        backgroundColor: Color(0XFF6d6875),
+        backgroundColor: GradientDecoration.getAppBarColor(),
         iconTheme: IconThemeData(
-            color:Color(0XFFC4BFBF)
+            color:GradientDecoration.getFontColor()
         ),
-        leading: new IconButton(icon: Icon(Icons.arrow_back), onPressed: (){
-          Navigator.pop(context);
-        }),
+
         actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Icon(Icons.notifications_none),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: GestureDetector(child: Icon(Icons.exit_to_app), onTap: (){
+              sign_in().signOutGoogle();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+            },),
+          )
         ],
       ),
       body: HomePageContent( ), // This trailing comma makes auto-formatting nicer for build methods.

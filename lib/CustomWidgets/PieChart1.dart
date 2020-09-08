@@ -40,20 +40,14 @@ class PieChart1State extends State {
 
   List<PieChartSectionData> showingSections(context) {
     String email = Provider.of<LoginModel>(context).email;
-    double totalSelectedNutrients = 2;
-    double totalConsumedNutrients = 8;
-//    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length >0){
-//      totalSelectedNutrients = Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length.toDouble();
-//    }else{
-//      HandleFoodModel(email).updateSelectedFoodListToLocalModel(context, email);
-//      totalSelectedNutrients = Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length.toDouble();
-//    }
-//    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length >0){
-//      totalConsumedNutrients = Provider.of<FoodModel>(context, listen: true).getConsumedNutrients().length.toDouble();
-//    }else{
-//      HandleFoodModel(email).updateSelectedFoodListToLocalModel(context, email);
-//      totalConsumedNutrients = Provider.of<FoodModel>(context, listen: true).getConsumedNutrients().length.toDouble();
-//    }
+    double totalSelectedNutrients = 10;
+    double totalConsumedNutrients = 5;
+    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length > 0){
+      totalSelectedNutrients = Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length.toDouble();
+    }
+    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length > 0){
+      totalConsumedNutrients = Provider.of<FoodModel>(context, listen: true).getConsumedNutrients().length.toDouble();
+    }
 
     print("selected nutri = $totalSelectedNutrients");
     print("consumed = $totalConsumedNutrients");
@@ -64,7 +58,7 @@ class PieChart1State extends State {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: const Color(0xffb5838d),
+            color: Colors.yellow,
             value: totalConsumedNutrients,
             title: '',
             radius: radius,
@@ -73,8 +67,8 @@ class PieChart1State extends State {
           );
         case 1:
           return PieChartSectionData(
-            color: const Color(0xffffad99),
-            value: totalSelectedNutrients,
+            color: const Color(0xff72efdd),
+            value: (totalSelectedNutrients - totalConsumedNutrients),
             title: '',
             radius: radius,
             titleStyle: TextStyle(

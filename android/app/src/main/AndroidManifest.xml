@@ -8,7 +8,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="thedietplan"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/dp_logo">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

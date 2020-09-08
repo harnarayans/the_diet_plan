@@ -74,26 +74,23 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Icon(
                     Icons.info_outline,
-                    color: Color(0xff6d6875),
+                    color: GradientDecoration.getButtonTextColor(),
                   ),
                 ),
                 Flexible(
                   child: Text(
                     "Select at least one food item from each nutritional category to prepare your diet chart",
-                    style: TextStyle(fontSize: 16, color: Color(0xff6d6875)),
+                    style: TextStyle(fontSize: 16, color: GradientDecoration.getButtonTextColor()),
                   ),
                 ),
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),
+
             ClayContainer(
               emboss: true,
-              color: Color(0xffffb4a2),
+              color: GradientDecoration.getGraphBackgroundColor(),
               child: Container(
                 height: 450,
-//              child: Multi_Select("Folate"),
                 child: ListView(
                     scrollDirection: Axis.vertical, children: (fp.getItemList(widget.selectedFoods))),
               ),
@@ -107,13 +104,13 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
                 trackDiet(email);
               },
               child: ClayContainer(
-                color: Color(0xffffcdb2),
+                color: GradientDecoration.getBackGroundColor(),
                 depth: 30,
                 child: Container(
                   child: Center(
                       child: Text(
                     "Prepare Your Diet Chart",
-                    style: TextStyle(color: Color(0xff6d6875), fontSize: 16),
+                    style: TextStyle(color: GradientDecoration.getButtonTextColor(), fontSize: 16),
                   )),
                   height: 50,
                   width: 300,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
 import 'package:thedietplan/types/TrackFoodArgs.dart';
 
 import 'subpages/TrackFoodContent.dart';
@@ -11,11 +12,11 @@ class TrackFood extends StatelessWidget {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("Your Diet"),
+        title: Text("Your Diet", style: TextStyle(color: GradientDecoration.getFontColor()),),
         centerTitle: true,
-        backgroundColor: Color(0XFF6d6875),
+        backgroundColor: GradientDecoration.getAppBarColor(),
         iconTheme: IconThemeData(
-            color:Color(0XFFC4BFBF)
+            color:GradientDecoration.getFontColor()
         ),
         actions: <Widget>[
         ],

@@ -25,7 +25,7 @@ class GoogleLoginButton{
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       child: ClayContainer(
-        color: Color(0xffffcdb2),
+        color: Color(0xff56cfe1),
         depth: 40,
         height: 50,
         child: Row(
@@ -39,7 +39,7 @@ class GoogleLoginButton{
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xff6d6875),
+                  color: GradientDecoration.getButtonTextColor(),
                 ),
               ),
             )

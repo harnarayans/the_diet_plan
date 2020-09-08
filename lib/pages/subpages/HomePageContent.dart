@@ -79,20 +79,40 @@ class _HomePageContentState extends State<HomePageContent> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
-                    child: Card(
-                      margin: EdgeInsets.all(20),
-                      child: PieChart1(),
-                      elevation: 10,
-                      color: Color(0xffff9980),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Card(
+                        child: Stack(
+                            children: <Widget>[
+                            PieChart1(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                              child: Text("Avg % target achieved"),
+                            ),
+                          ],
+                        ),
+                        elevation: 10,
+                        color: GradientDecoration.getGraphBackgroundColor(),
+                      ),
                     ),
                   ),
                   Expanded(
-                      child: Card(
-                    margin: EdgeInsets.all(20),
-                    child: PieChart1(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Card(
+                    child: Stack(
+                        children: <Widget>[
+                          PieChart1(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                            child: Text("Daily target achieved"),
+                          ),
+                        ],
+                    ),
                     elevation: 10,
-                    color: Color(0xffff9980),
-                  )),
+                    color: GradientDecoration.getGraphBackgroundColor(),
+                  ),
+                      )),
                 ],
               ),
             ]),
@@ -106,13 +126,13 @@ class _HomePageContentState extends State<HomePageContent> {
                   navigateToFoodTracking(context);
                 },
                 child: ClayContainer(
-                  color: Color(0xffffcdb2),
+                  color: GradientDecoration.getBackGroundColor(),
                   depth: 40,
                   child: Center(
                       child: Text(
                     "Track Your Diet",
                     style: TextStyle(
-                        color: Color(0xff6d6875),
+                        color: GradientDecoration.getButtonTextColor(),
                         fontSize: 22,
                         fontWeight: FontWeight.w600),
                   )),

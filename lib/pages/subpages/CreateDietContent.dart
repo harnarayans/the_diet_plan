@@ -117,13 +117,13 @@ class _CreateDietContentState extends State<CreateDietContent> {
                 children: <Widget>[
                   Icon(
                     Icons.info_outline,
-                    color: Color(0xff6d6875),
+                    color: GradientDecoration.getButtonTextColor(),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: Text(
                       "Nutrients Progress Indicator",
-                      style: TextStyle( fontSize: 15, color: Color(0xff6d6875)),
+                      style: TextStyle( fontSize: 15, color: GradientDecoration.getButtonTextColor()),
                     ),
                   ),
                 ],
@@ -133,7 +133,7 @@ class _CreateDietContentState extends State<CreateDietContent> {
           ),
           SizedBox(height: 20,),
           ClayContainer(
-            color: Color(0xffffbd99),
+            color: GradientDecoration.getGraphBackgroundColor(),
             depth: 30,
             emboss: true,
             child: SizedBox(
@@ -150,9 +150,9 @@ class _CreateDietContentState extends State<CreateDietContent> {
           SizedBox(height: 20,),
           ClayContainer(
             depth: 10,
-            color: Color(0xffffcdb2),
+            color: Color(0xfffad47d),
             child: Container(
-              height: 250,
+              height: 280,
               margin: EdgeInsets.symmetric(vertical: 5),
               child: Stack(
                 children: [
@@ -188,13 +188,14 @@ class _CreateDietContentState extends State<CreateDietContent> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            "Drag and drop here the food items you consumed today", style: TextStyle(color: Color(0xff6d6875)),),
+                            "Drag and drop here the food items you consumed today", style: TextStyle(color: GradientDecoration.getButtonTextColor()),),
                       ),
                   ),
                 ],
               ),
             ),
           ),
+          SizedBox(height: 10,),
           FlatButton(
             onPressed: () {
               String email = Provider.of<LoginModel>(context, listen: false)
@@ -202,13 +203,13 @@ class _CreateDietContentState extends State<CreateDietContent> {
               storeItems(context, email);
             },
             child: ClayContainer(
-              color: Color(0xffffcdb2),
+              color: GradientDecoration.getBackGroundColor(),
               depth: 40,
               height: 40,
               child: Center(
                   child: Text(
                 "Record The Consumed Food Items",
-                style: TextStyle(color: Color(0xff6d6875), fontSize: 16),
+                style: TextStyle(color: GradientDecoration.getButtonTextColor(), fontSize: 16),
               )),
             ),
           ),
@@ -218,13 +219,13 @@ class _CreateDietContentState extends State<CreateDietContent> {
               navigateToTrackFood(context);
             },
             child: ClayContainer(
-              color: Color(0xffffcdb2),
+              color: GradientDecoration.getBackGroundColor(),
               depth: 40,
               height: 40,
               child: Center(
                   child: Text(
                     "Change The Selected Food Items",
-                    style: TextStyle(color: Color(0xff6d6875), fontSize: 16),
+                    style: TextStyle(color: GradientDecoration.getButtonTextColor(), fontSize: 16),
                   )),
             ),
           ),

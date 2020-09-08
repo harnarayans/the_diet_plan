@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:thedietplan/CustomWidgets/GradientDecoration.dart';
 import 'package:thedietplan/models/FoodModel.dart';
 import 'package:thedietplan/types/FoodItem.dart';
 
@@ -23,13 +24,13 @@ class Chips extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(title, style: TextStyle(
-                  color: Colors.black,
+                  color: GradientDecoration.getButtonTextColor(),
                   fontSize: 14
               ),),
               Icon(Icons.close, size: 20,),
             ],
           ),
-          color: Color(0XFFb56d7b),
+          color: Color(0XFF79b0f2),
         ),
       ),
     );
