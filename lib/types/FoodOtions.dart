@@ -10,10 +10,13 @@ class FoodOptions{
     "Vitamin B":["Spinach","Meat","Eggs","Curd/Yogurt","Milk Prods"],
     "Vitamin D":["Sunlight","Cheese","Egg Yolk","Salmon"],
     "Iron":["Soybean","Lentils","Spinach","Tofu","Nuts","Raisins"],
-    "Calcium":["Spinach","Soybeans","Curd/Yogurt", "Milk Prods", "Cheese", "Beans", "Lentils", "Almonds", "dark chocolate"],
+    "Calcium":["Soybean","Curd/Yogurt", "Milk Prods", "Cheese", "Beans", "Lentils", "Almonds", "dark chocolate"],
     "Protein":["Legumes", "Eggs", "Chicken", "Nuts", "Grains", "Milk Prods"],
-    "Good Fat":["Avocados", "Cheese", "Dark Chocolate", "Salmon", "Nuts", "Coconuts", "Curd/Yogurt"],
-    "Fiber":["Spinach","Broccoli","Carrots", "Green Beans", "Lentils", "Coconut", "Coco water", "Kidney beans", "Oats", "Pear", "Apple", "Banana"]
+    "Good Fat":["Avocados", "Cheese", "Dark Chocolate", "Salmon", "Nuts", "Coconut", "Curd/Yogurt"],
+    "Fiber":["Broccoli","Carrots", "Green Beans", "Lentils", "Coconut", "Coco water", "Kidney beans", "Oats", "Pear", "Apple", "Banana"],
+    "Magnesium":["Nuts", "Spinach", "Avocados", "Banana"],
+    "Phosphorus":["Chicken", "Salmon","Nuts" ],
+    "Potassium" :["Beans", "Avocados", "Banana"]
   };
 
   static Map<String,List<String>> getFoodOptions(){
@@ -29,7 +32,11 @@ class FoodOptions{
       "Calcium":[],
       "Protein":[],
       "Good Fat":[],
-      "Fiber":[]};
+      "Fiber":[],
+      "Magnesium":[],
+      "Phosphorus":[],
+      "Potassium":[]
+      };
   }
 
   List<FoodItem> prepareFoodObjects(List<String> foodList){

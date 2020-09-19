@@ -33,6 +33,12 @@ class FoodModel extends ChangeNotifier{
     notifyListeners();
   }
 
+  void setSelectedFoodList(List<FoodItem> foodsList){
+    selectedFoodList = {};
+    consumedFoodList.addAll(foodsList);
+    notifyListeners();
+  }
+
   void setConsumedFoods(List<FoodItem> foodsList){
     consumedFoodList = {};
     consumedFoodList.addAll(foodsList);

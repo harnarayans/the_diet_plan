@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thedietplan/models/FoodModel.dart';
 import 'package:thedietplan/models/LoginModel.dart';
+import 'package:thedietplan/types/FoodItem.dart';
 import 'package:thedietplan/util/HandleFoodModel.dart';
 
 import 'Indicator.dart';
@@ -14,7 +18,8 @@ class PieChart1 extends StatefulWidget {
 
 class PieChart1State extends State {
   int touchedIndex;
-
+  double totalSelectedNutrients;
+  double totalConsumedNutrients;
   @override
   Widget build(BuildContext context) {
     return  PieChart(
@@ -38,17 +43,15 @@ class PieChart1State extends State {
     );
   }
 
-  List<PieChartSectionData> showingSections(context) {
-    String email = Provider.of<LoginModel>(context).email;
-    double totalSelectedNutrients = 10;
-    double totalConsumedNutrients = 5;
-    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length > 0){
-      totalSelectedNutrients = Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length.toDouble();
-    }
-    if(Provider.of<FoodModel>(context, listen: true).getSelectedNutrients().length > 0){
-      totalConsumedNutrients = Provider.of<FoodModel>(context, listen: true).getConsumedNutrients().length.toDouble();
-    }
+  void updateNutrients() async{
+    totalSelectedNutrients = (Provider.of<FoodModel>(context).getSelectedNutrients().length > 0? Provider.of<FoodModel>(context).getSelectedNutrients().length : 10).toDouble();
+    totalConsumedNutrients = (Provider.of<FoodModel>(context).getConsumedNutrients().length > 0? Provider.of<FoodModel>(context).getConsumedNutrients().length : 5).toDouble();
+  }
 
+  List<PieChartSectionData> showingSections(context) {
+    totalSelectedNutrients = 10;
+    totalConsumedNutrients = 5;
+    updateNutrients();
     print("selected nutri = $totalSelectedNutrients");
     print("consumed = $totalConsumedNutrients");
     return List.generate(2, (i) {

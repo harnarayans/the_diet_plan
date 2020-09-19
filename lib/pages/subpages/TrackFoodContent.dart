@@ -45,16 +45,6 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
 
   void trackDiet(email) async {
     Provider.of<FoodModel>(context,listen: false).setSelectedFoods(fp.getSelectedItems());
-    await dbReference
-        .collection("foods")
-        .add({
-          'selection': true,
-          'userEmail': email,
-          'selectedItems': fp.getSelectedItems(),
-          'createdAt': DateTime.now()
-        })
-        .then((value) => {print('successfully updated the selected food list')})
-        .catchError((error) => print("Failed to add food: $error"));
     Navigator.pushNamed(context, "/createDiet",
         arguments: CreateDietArguments(
             foodItems: fp.getSelectedItems(), memberFoodItems: []));
@@ -79,7 +69,7 @@ class _TrackFoodContentState extends State<TrackFoodContent> {
                 ),
                 Flexible(
                   child: Text(
-                    "Select at least one food item from each nutritional category to prepare your diet chart",
+                    "Select available food items from each nutritional category to prepare your diet chart. It's one time selection and can be changed later anytime.",
                     style: TextStyle(fontSize: 16, color: GradientDecoration.getButtonTextColor()),
                   ),
                 ),

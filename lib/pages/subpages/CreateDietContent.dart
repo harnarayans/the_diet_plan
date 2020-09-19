@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thedietplan/CustomWidgets/Chips.dart';
 import 'package:thedietplan/CustomWidgets/DietProgressIndicator.dart';
 import 'package:thedietplan/CustomWidgets/FoodTile.dart';
@@ -28,7 +29,11 @@ class _CreateDietContentState extends State<CreateDietContent> {
   List<Color> consumedColors=[];
 
   void storeItems(context,email) async {
-    await HandleFoodModel(email).storeLocalModelToDB(context);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    HandleFoodModel handle = await HandleFoodModel(email,prefs: prefs);
+    handle.saveConsumptionToLocalStorage(context);
+    handle.saveSelectionToLocalStorage(context);
+    handle.storeLocalModelToDB(context);
     Scaffold.of(context).showSnackBar(SnackBar(content: Text('Successfully updated the consumed food items'), backgroundColor: Colors.lightBlueAccent,));
     Navigator.of(context).popUntil(ModalRoute.withName("/home"));
 
@@ -162,7 +167,7 @@ class _CreateDietContentState extends State<CreateDietContent> {
                       return isSuccessful
                           ? Container(
                               child: SizedBox(
-                                height: 500,
+                                height: 400,
                                 width: double.infinity,
                                 child: Wrap(
                                   children: getSelectedItemsLayout(context),
@@ -171,7 +176,7 @@ class _CreateDietContentState extends State<CreateDietContent> {
                             )
                           : Container(
                               width: double.infinity,
-                              height: 500,
+                              height: 400,
                             );
                     },
                     onWillAccept: (data) {
@@ -213,7 +218,7 @@ class _CreateDietContentState extends State<CreateDietContent> {
               )),
             ),
           ),
-          SizedBox(height: 15,),
+          SizedBox(height: 10,),
           FlatButton(
             onPressed: () {
               navigateToTrackFood(context);

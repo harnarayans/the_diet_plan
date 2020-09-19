@@ -42,10 +42,12 @@ class _DietProgressIndicatorState extends State<DietProgressIndicator> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Wrap(
+      height: 40,
+      child: ListView(
         children: getBoxes(context),
-        runAlignment: WrapAlignment.start,
-        crossAxisAlignment: WrapCrossAlignment.start,
+        scrollDirection: Axis.horizontal,
+//        runAlignment: WrapAlignment.start,
+//        crossAxisAlignment: WrapCrossAlignment.start,
       ),
     );
   }

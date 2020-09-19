@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:clay_containers/clay_containers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:thedietplan/CustomWidgets/BarChart1.dart';
@@ -8,8 +11,10 @@ import 'package:thedietplan/CustomWidgets/PieChart1.dart';
 import 'package:thedietplan/models/FoodModel.dart';
 import 'package:thedietplan/models/LoginModel.dart';
 import 'package:thedietplan/types/FoodItem.dart';
+import 'package:thedietplan/types/FoodOtions.dart';
 import 'package:thedietplan/types/TrackFoodArgs.dart';
 import 'package:thedietplan/util/HandleFoodModel.dart';
+import 'package:random_string/random_string.dart';
 
 class HomePageContent extends StatefulWidget {
   @override
@@ -20,31 +25,53 @@ class _HomePageContentState extends State<HomePageContent> {
   final dbReference = FirebaseFirestore.instance;
 
   void navigateToFoodTracking(context) async {
-    List<String> memberFoods = [];
-    bool navigationCompleted = false;
-    String email =
-        Provider.of<LoginModel>(context, listen: false).getUserEmail();
-    List<FoodItem> selectedItems =
-        Provider.of<FoodModel>(context, listen: false).getSelectedFoodList();
-    List<FoodItem> consumedItems =
-        Provider.of<FoodModel>(context, listen: false).getConsumedFoodList();
-
-    if (selectedItems.length > 0) {
-      //navigate to creatediet with selected and consumed
+    String email = Provider.of<LoginModel>(context, listen: false).email;
+    var selectionReference = FirebaseDatabase.instance.reference().child(
+        'selection_indicator').child('user');
+    bool selected = false;
+    Map<dynamic,dynamic> jsonTree = {};
+    await selectionReference.once().then((snap) => {
+      if (snap.value != null)
+        {
+        jsonTree = snap.value as Map<dynamic,dynamic>,
+          jsonTree.forEach((key, value) {
+            if (value["email"] == email && value["selected"] == true) {
+              selected = true;
+            }
+          }),
+        }
+    });
+    if(selected){
       Navigator.pushNamed(context, "/createDiet");
-    } else {
-      HandleFoodModel handle = HandleFoodModel(email);
-      //fetch the selection list from db
-      int selectionExist = await handle.updateSelectedFoodListToLocalModel(context);
-      //if selectionlist.length>0 navigate to create diet page
-      //else navigate to track food page and create the selection list.
-      if (selectionExist > 0) {
-        handle.updateConsumedFoodListToLocalModel(context);
-        Navigator.pushNamed(context, "/createDiet");
-      } else {
-        Navigator.pushNamed(context, "/food", arguments: TrackFoodArgs({}));
-      }
+    }else{
+      Navigator.pushNamed(context, "/food", arguments: TrackFoodArgs(FoodOptions.getEmptyFoodOptions()));
+      selectionReference.child(randomAlphaNumeric(10)).set({"email":email, "selected":true});
     }
+//    List<String> memberFoods = [];
+//    bool navigationCompleted = false;
+//    String email =
+//        Provider.of<LoginModel>(context, listen: false).getUserEmail();
+//    List<FoodItem> selectedItems =
+//        Provider.of<FoodModel>(context, listen: false).getSelectedFoodList();
+//    List<FoodItem> consumedItems =
+//        Provider.of<FoodModel>(context, listen: false).getConsumedFoodList();
+//
+//    if (selectedItems.length > 0) {
+//      //navigate to creatediet with selected and consumed
+//      Navigator.pushNamed(context, "/createDiet");
+//    } else {
+//      HandleFoodModel handle = HandleFoodModel(email);
+//      //fetch the selection list from db
+//      int selectionExist = await handle.updateSelectedFoodListToLocalModel(context);
+//      //if selectionlist.length>0 navigate to create diet page
+//      //else navigate to track food page and create the selection list.
+//      if (selectionExist > 0) {
+//        handle.updateConsumedFoodListToLocalModel(context);
+//        Navigator.pushNamed(context, "/createDiet");
+//      } else {
+//        Navigator.pushNamed(context, "/food", arguments: TrackFoodArgs(FoodOptions.getEmptyFoodOptions()));
+//      }
+//    }
   }
 
 

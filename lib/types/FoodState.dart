@@ -11,7 +11,11 @@ class FoodState extends ChangeNotifier{
     "Calcium":[],
     "Protein":[],
     "Good Fat":[],
-    "Fiber":[]};
+    "Fiber":[],
+    "Magnesium":[],
+    "Phosphorus":[],
+    "Potassium":[]
+  };
 
   static List<String> getSelectedItems(String nutrient){
     List<String> menuItems = FoodOptions.getFoodOptions()[nutrient];
